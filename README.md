@@ -2,6 +2,7 @@
 
 This is a small javascript function to rescue you from infinite callbacks.
 
+
 ## Background ##
 
 Old days, you might write something like this:
@@ -25,6 +26,7 @@ Old days, you might write something like this:
 
 The traditional callback style is no longer suitable for heavy event driven style programming. 
 
+
 Now, see what JSChain can do:
 
 	new JSChain(
@@ -47,6 +49,7 @@ Now, see what JSChain can do:
 	{
 		console.log('done');
 	});
+
 
 With the help of JSChain, the first demo code could be written like this:
 
