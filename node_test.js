@@ -16,8 +16,31 @@ new JSChain(
 	setTimeout(next,1000);
 }).exec(function()
 {
-	console.log('done');
+	
+	console.log('begin get urls');
+	// example of data scraping
+
+	function getURL(url,next)
+	{
+		console.log('getting '+url);
+		setTimeout(function()
+		{
+			console.log('done');
+			next();
+		},1000);
+	}
+
+
+	var chain = new JSChain({getURL: getURL});
+	for(var i=1;i<100;i++)
+	{
+		chain.getURL('http://example.com/'+i);
+	}
+
+
 });
+
+
 
 
 

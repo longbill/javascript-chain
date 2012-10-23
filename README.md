@@ -64,4 +64,22 @@ With the help of JSChain, the first demo code could be written like this:
 	new JSChain(myController).ajaxGet().saveToDatabase().notifyUser().markNotified();
 
 
+And JSChain is very useful for data scraping projects:
+
+	function getURL(url,next)
+	{
+		console.log('getting '+url);
+		setTimeout(function()
+		{
+			console.log('done');
+			next();
+		},1000);
+	}
+
+
+	var chain = new JSChain({getURL: getURL});
+	for(var i=1;i<100;i++)
+	{
+		chain.getURL('http://example.com/'+i);
+	}
 
