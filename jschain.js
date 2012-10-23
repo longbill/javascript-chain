@@ -35,14 +35,14 @@ new JSChain(
 function JSChain(obj)
 {
 	var self = this;
-	this.____items = [];
-	this.____next = function()
+	this.____items = []; //this remembers the callback functions list
+	this.____next = function()  //execute next function
 	{
 		var func = self.____items.shift();
 		if (func) func.call();
-	}
+	};
 
-	this.exec = function()
+	this.exec = function() //support for custom function
 	{
 		var args = [].slice.call(arguments,1);
 		args.push(self.____next);
@@ -52,8 +52,9 @@ function JSChain(obj)
 			func.apply(obj,args);
 		});
 		return self;
-	}
+	};
 
+	//copy and wrap the methods of obj
 	for(var func in obj)
 	{
 		if (typeof obj[func] == 'function' && obj.hasOwnProperty(func))
@@ -62,15 +63,15 @@ function JSChain(obj)
 			{
 				self[func] = function()
 				{
-					var args = [].slice.call(arguments);
-					args.push(self.____next);
-					self.____items.push(function()
+					var args = [].slice.call(arguments); //change arguments as an array
+					args.push(self.____next); //pass next callback to the last argument
+					self.____items.push(function() //wrap the function and push into callbacks array
 					{
 						obj[func].apply(obj,args);
 					});
-					return self;
+					return self; //always return JSChain it self like jQuery
 				}
-			})(func);
+			})(func); // this is the closure tricks
 		}
 	}
 

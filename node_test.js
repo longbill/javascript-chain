@@ -36,7 +36,10 @@ new JSChain(
 	{
 		chain.getURL('http://example.com/'+i);
 	}
-
+	chain.exec(function()
+	{
+		console.log('DONE!!!');
+	});
 
 });
 

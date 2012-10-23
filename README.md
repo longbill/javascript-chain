@@ -83,3 +83,60 @@ And JSChain is very useful for data scraping projects:
 		chain.getURL('http://example.com/'+i);
 	}
 
+The JSChain itself is very tiny. The full documented source code of JSChain is only 1.6KB. I can paste the source code here, so you can read the source code. This could help you understand how it works.
+
+
+	function JSChain(obj)
+	{
+		var self = this;
+		this.____items = []; //this remembers the callback functions list
+		this.____next = function()  //execute next function
+		{
+			var func = self.____items.shift();
+			if (func) func.call();
+		};
+
+		this.exec = function() //support for custom function
+		{
+			var args = [].slice.call(arguments,1);
+			args.push(self.____next);
+			var func = arguments[0];
+			self.____items.push(function()
+			{
+				func.apply(obj,args);
+			});
+			return self;
+		};
+
+		//copy and wrap the methods of obj
+		for(var func in obj)
+		{
+			if (typeof obj[func] == 'function' && obj.hasOwnProperty(func))
+			{
+				(function(func)
+				{
+					self[func] = function()
+					{
+						var args = [].slice.call(arguments); //change arguments as an array
+						args.push(self.____next); //pass next callback to the last argument
+						self.____items.push(function() //wrap the function and push into callbacks array
+						{
+							obj[func].apply(obj,args);
+						});
+						return self; //always return JSChain it self like jQuery
+					}
+				})(func); // this is the closure tricks
+			}
+		}
+
+		//start execute the chained functions in next tick
+		setTimeout(function()
+		{
+			self.____next();
+		},0);
+
+		return this;
+	}
+
+Good luck.
+
