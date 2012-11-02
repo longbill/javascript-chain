@@ -9,7 +9,7 @@ This is a small javascript function to rescue you from infinite callbacks.
 ## Quick Start ##
 
 ```javascript
-new JSChain(
+var _map = 
 {
 	foo: function(next)
 	{
@@ -21,7 +21,9 @@ new JSChain(
 		console.log('bar: '+a+' '+b);
 		setTimeout(next,1000);
 	}
-}).foo().bar('hello','world').exec(function(next)
+};
+
+new JSChain(_map).foo().bar('hello','world').exec(function(next)
 {
 	console.log('cumtome function');
 	setTimeout(next,1000);
