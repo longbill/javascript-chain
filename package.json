@@ -1,0 +1,32 @@
+{
+  "name": "jschain",
+  "description": "Chain style sequentially programming for Javascript asynchronous jobs.",
+  "tags": [
+    "nodejs",
+    "util",
+    "chain",
+    "asynchronous"
+  ],
+  "version": "0.0.1",
+  "author": "Chunlong Liu <longbill.cn@gmail.com>",
+  "engines": [
+    "node >= 0.3.6"
+  ],
+  "main": "jschain.js",
+  "dependencies": {},
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/longbill/javascript-chain.git"
+  },
+  "keywords": [
+    "chain",
+    "asynchronous"
+  ],
+  "license": "BSD"
+}
