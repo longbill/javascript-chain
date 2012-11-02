@@ -2,6 +2,35 @@
 
 This is a small javascript function to rescue you from infinite callbacks.
 
+## Install ##
+
+	npm install jschain
+
+## Quick Start ##
+
+```javascript
+new JSChain(
+{
+	foo: function(next)
+	{
+		console.log('foo');
+		setTimeout(next,1000);
+	},
+	bar: function(a,b,next)
+	{
+		console.log('bar: '+a+' '+b);
+		setTimeout(next,1000);
+	}
+}).foo().bar('hello','world').exec(function(next)
+{
+	console.log('cumtome function');
+	setTimeout(next,1000);
+}).exec(function()
+{
+	console.log('done');
+});
+```
+
 
 ## Background ##
 
