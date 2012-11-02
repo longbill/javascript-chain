@@ -83,3 +83,5 @@ function JSChain(obj)
 
 	return this;
 }
+
+module.exports = JSChain;
