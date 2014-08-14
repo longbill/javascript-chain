@@ -36,21 +36,37 @@ function JSChain(obj)
 {
 	var self = this;
 	this.____items = []; //this remembers the callback functions list
-	this.____next = function()  //execute next function
+	this.____finally = null;
+	this.____next = function(jump)  //execute next function
 	{
-		var func = self.____items.shift();
-		if (func) func.call();
+		if (!jump)
+		{
+			var func = self.____items.shift();
+			if (func) func.call();
+		}
+		else self.____items = [];
+		
+		if (self.____items.length == 0 && typeof self.____finally == 'function')
+		{
+			self.____finally.call(obj);
+			self.____finally = null;
+		}
 	};
 
 	this.exec = function() //support for custom function
 	{
-		var args = [].slice.call(arguments,1);
+		var args = [].slice.call(arguments,1),func = arguments[0];
 		args.push(self.____next);
-		var func = arguments[0];
 		self.____items.push(function()
 		{
 			func.apply(obj,args);
 		});
+		return self;
+	};
+
+	this.end = function(func) //support for final function
+	{
+		self.____finally = func;
 		return self;
 	};
 
@@ -63,7 +79,7 @@ function JSChain(obj)
 			{
 				self[func] = function()
 				{
-					var args = [].slice.call(arguments); //change arguments as an array
+					var args = [].slice.call(arguments);
 					args.push(self.____next); //pass next callback to the last argument
 					self.____items.push(function() //wrap the function and push into callbacks array
 					{
@@ -76,11 +92,7 @@ function JSChain(obj)
 	}
 
 	//start execute the chained functions in next tick
-	setTimeout(function()
-	{
-		self.____next();
-	},0);
-
+	setTimeout(self.____next,0);
 	return this;
 }
 

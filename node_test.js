@@ -1,3 +1,7 @@
+var JSChain = require('./jschain');
+
+
+
 new JSChain(
 {
 	foo: function(next)
@@ -14,7 +18,7 @@ new JSChain(
 {
 	console.log('cumtome function');
 	setTimeout(next,1000);
-}).exec(function()
+}).end(function()
 {
 	
 	console.log('begin get urls');
@@ -26,77 +30,25 @@ new JSChain(
 		setTimeout(function()
 		{
 			console.log('done');
-			next();
+			next( url == 'http://example.com/4' );
 		},1000);
 	}
 
 
 	var chain = new JSChain({getURL: getURL});
-	for(var i=1;i<100;i++)
+	chain.end(function()
+	{
+		console.log('chain.end');
+	});
+	for(var i=1;i<10;i++)
 	{
 		chain.getURL('http://example.com/'+i);
 	}
-	chain.exec(function()
+
+	chain.exec(function(next)
 	{
-		console.log('DONE!!!');
+		console.log('before end');
+		next();
 	});
-
 });
-
-
-
-
-
-
-function JSChain(obj)
-{
-	var self = this;
-	this.____items = [];
-	this.____next = function()
-	{
-		var func = self.____items.shift();
-		if (func) func.call();
-	}
-
-	this.exec = function()
-	{
-		var args = [].slice.call(arguments,1);
-		args.push(self.____next);
-		var func = arguments[0];
-		self.____items.push(function()
-		{
-			func.apply(obj,args);
-		});
-		return self;
-	}
-
-	for(var func in obj)
-	{
-		if (typeof obj[func] == 'function' && obj.hasOwnProperty(func))
-		{
-			(function(func)
-			{
-				self[func] = function()
-				{
-					var args = [].slice.call(arguments);
-					args.push(self.____next);
-					self.____items.push(function()
-					{
-						obj[func].apply(obj,args);
-					});
-					return self;
-				}
-			})(func);
-		}
-	}
-
-	//start execute the chained functions in next tick
-	setTimeout(function()
-	{
-		self.____next();
-	},0);
-
-	return this;
-}
-
 
