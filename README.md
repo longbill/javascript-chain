@@ -1,3 +1,5 @@
+# Deprecated. Promise is a better solution  #
+
 # Javascript Chain #
 
 This is a small javascript function to rescue you from infinite callbacks.
